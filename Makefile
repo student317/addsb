@@ -7,8 +7,8 @@ ASFLAGS = -g
 PROCEDURE ?= addsb.s:addsb
 ILIMIT ?= 48
 MAXSIZE ?= 256
-BADINSNS ?= 'bswap,j*,call*'
-MINIPC ?= 1.87
+BADINSNS ?= 'cmov*,set*,j*,call*'
+MINIPC ?= 1.94
 
 MAXINSNS = $(ILIMIT)
 

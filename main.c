@@ -7,6 +7,8 @@
 #include <string.h>
 #include <sys/time.h>
 
+#define __noinline __attribute__((noinline))
+
 extern uint64_t addsb(uint64_t x, uint64_t y);
 
 /* https://en.wikipedia.org/wiki/Xorshift#xorshift* */
@@ -20,9 +22,9 @@ static uint64_t random_u64(uint64_t *seed) {
 }
 
 /* Only for testing. Such solution would get 0 points. */
-static uint64_t addsb_iter(uint64_t x, uint64_t y) {
+static __noinline uint64_t addsb_iter(uint64_t x, uint64_t y) {
   uint64_t r = 0;
-  for (int i = 0; i < 64; i+=8) {
+  for (int i = 0; i < 64; i += 8) {
     int xb = (int8_t)(x >> i);
     int yb = (int8_t)(y >> i);
     int rb = xb + yb;
@@ -30,7 +32,7 @@ static uint64_t addsb_iter(uint64_t x, uint64_t y) {
       rb = INT8_MAX;
     if (rb < INT8_MIN)
       rb = INT8_MIN;
-    r |= rb << i;
+    r |= (uint64_t)(rb & 255) << i;
   }
   return r;
 }
@@ -39,8 +41,9 @@ static void run(uint64_t x, uint64_t y) {
   uint64_t fast = addsb(x, y);
   uint64_t slow = addsb_iter(x, y);
   if (fast != slow) {
-    printf("0x%016" PRIX64 " + 0x%016" PRIX64
-           " != 0x%016" PRIX64 "(0x%016" PRIX64 ")\n", x, y, slow, fast);
+    printf("0x%016" PRIX64 " + 0x%016" PRIX64 " != 0x%016" PRIX64
+           " (your answer: 0x%016" PRIX64 ")\n",
+           x, y, slow, fast);
     exit(EXIT_FAILURE);
   }
 }
