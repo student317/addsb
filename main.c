@@ -41,7 +41,7 @@ static void run(uint64_t x, uint64_t y) {
   uint64_t fast = addsb(x, y);
   uint64_t slow = addsb_iter(x, y);
   if (fast != slow) {
-    printf("0x%016" PRIX64 " + 0x%016" PRIX64 " != 0x%016" PRIX64
+    printf("0x%016" PRIX64 " + 0x%016" PRIX64 " == 0x%016" PRIX64
            " (your answer: 0x%016" PRIX64 ")\n",
            x, y, slow, fast);
     exit(EXIT_FAILURE);
